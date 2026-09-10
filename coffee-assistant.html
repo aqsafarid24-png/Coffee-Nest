@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coffee Assistant | Coffee Nest</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        .assistant-page {
+            min-height: 100vh;
+            padding: 120px 20px 60px;
+        }
+
+        .assistant-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .assistant-title h1 {
+            color: #e6a46d;
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .assistant-title p {
+            color: #d8c2b2;
+        }
+
+        .coffee-assistant-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 14px 28px;
+            background: #e6a46d;
+            color: #1b120d;
+            border: none;
+            border-radius: 30px;
+            font-family: Poppins, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .coffee-assistant-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,.25);
+        }
+
+        .coffee-assistant {
+            display: none;
+            width: min(600px, 95%);
+            height: 650px;
+            margin: 30px auto;
+            background: #2b1d16;
+            border: 1px solid #6f4e37;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,.4);
+        }
+
+        .assistant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: #1b120d;
+            border-bottom: 1px solid #6f4e37;
+        }
+
+        .assistant-header strong {
+            display: block;
+            color: #e6a46d;
+            font-size: 17px;
+        }
+
+        .assistant-header small {
+            color: #b9a294;
+        }
+
+        #closeAssistant {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #6f4e37;
+            border-radius: 50%;
+            background: transparent;
+            color: #e6a46d;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .assistant-messages {
+            height: calc(100% - 135px);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .assistant-message {
+            max-width: 90%;
+            padding: 13px 16px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .assistant-message.bot {
+            background: #1b120d;
+            color: #f1dfd2;
+            border: 1px solid #6f4e37;
+        }
+
+        .assistant-message.user {
+            margin-left: auto;
+            background: #e6a46d;
+            color: #1b120d;
+        }
+
+        .quick-questions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .quick-questions button {
+            padding: 11px;
+            background: transparent;
+            color: #e6a46d;
+            border: 1px solid #6f4e37;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: Poppins, sans-serif;
+            font-size: 12px;
+        }
+
+        .quick-questions button:hover {
+            background: #e6a46d;
+            color: #1b120d;
+        }
+
+        .assistant-input {
+            height: 75px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 15px;
+            background: #1b120d;
+            border-top: 1px solid #6f4e37;
+        }
+
+        .assistant-input input {
+            flex: 1;
+            min-width: 0;
+            padding: 13px 17px;
+            background: #2b1d16;
+            color: white;
+            border: 1px solid #6f4e37;
+            border-radius: 25px;
+            outline: none;
+            font-family: Poppins, sans-serif;
+        }
+
+        .assistant-input input::placeholder {
+            color: #a99588;
+        }
+
+        .assistant-input button {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: #e6a46d;
+            color: #1b120d;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .assistant-result {
+            margin-top: 12px;
+        }
+
+        .answer-title {
+            color: #e6a46d;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .coffee-card {
+            background: #2b1d16;
+            border: 1px solid #6f4e37;
+            border-radius: 15px;
+            padding: 13px;
+            margin-top: 10px;
+        }
+
+        .coffee-card h3 {
+            color: #e6a46d;
+            margin: 0 0 5px;
+            font-size: 16px;
+        }
+
+        .coffee-card p {
+            color: #d8c2b2;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .coffee-card strong {
+            color: #e6a46d;
+        }
+
+        @media (max-width: 600px) {
+            .assistant-page {
+                padding-top: 100px;
+            }
+
+            .assistant-title h1 {
+                font-size: 30px;
+            }
+
+            .coffee-assistant {
+                height: 600px;
+            }
+
+            .quick-questions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-mug-hot"></i>
+            Coffee Nest
+        </div>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="experience.html">Experience</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="assistant-page">
+
+        <div class="assistant-title">
+            <h1>☕ AI Coffee Assistant</h1>
+            <p>Ask anything about Coffee Nest</p>
+        </div>
+
+        <!-- ==========================
+             AI COFFEE ASSISTANT
+        =========================== -->
+
+        <button id="coffeeAssistantBtn" class="coffee-assistant-btn">
+            Coffee Assistant
+        </button>
+
+        <div id="coffeeAssistant" class="coffee-assistant">
+
+            <div class="assistant-header">
+                <div>
+                    <strong>☕ Coffee Nest Assistant</strong>
+                    <small>AI Coffee Guide</small>
+                </div>
+
+                <button id="closeAssistant">×</button>
+            </div>
+
+            <div id="assistantMessages" class="assistant-messages">
+
+                <div class="assistant-message bot">
+                    👋 Hi! I'm your Coffee Nest Assistant.
+                    <br><br>
+                    Tell me what kind of coffee you want and I'll recommend one for you! 
+                </div>
+
+                <div class="quick-questions">
+                    <button data-question="Mujhe sweet cold coffee chahiye">
+                         Sweet Cold Coffee
+                    </button>
+
+                    <button data-question="Mujhe strong coffee chahiye">
+                         Strong Coffee
+                    </button>
+
+                    <button data-question="Mujhe chocolate coffee chahiye">
+                        Chocolate Coffee
+                    </button>
+
+                    <button data-question="PKR 800 ke andar coffee batao">
+                         Under PKR 800
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="assistant-input">
+                <input
+                    type="text"
+                    id="assistantInput"
+                    placeholder="Ask about coffee..."
+                    autocomplete="off"
+                >
+
+                <button id="assistantSend" aria-label="Send">
+                    ➤
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        /* =========================================
+           COFFEE NEST MENU
+        ========================================= */
+
+        const coffees = [
+            {
+                name: "Espresso",
+                type: "Hot",
+                price: 450,
+                description: "Rich, bold and intense coffee.",
+                tags: ["strong", "bold", "classic"]
+            },
+            {
+                name: "Americano",
+                type: "Hot",
+                price: 500,
+                description: "Espresso blended with hot water.",
+                tags: ["strong", "classic"]
+            },
+            {
+                name: "Cappuccino",
+                type: "Hot",
+                price: 650,
+                description: "Espresso with steamed milk foam.",
+                tags: ["creamy", "smooth", "classic"]
+            },
+            {
+                name: "Latte",
+                type: "Hot",
+                price: 700,
+                description: "Smooth coffee with creamy milk.",
+                tags: ["creamy", "smooth", "mild"]
+            },
+            {
+                name: "Flat White",
+                type: "Hot",
+                price: 700,
+                description: "Velvety smooth espresso coffee.",
+                tags: ["smooth", "classic"]
+            },
+            {
+                name: "Mocha",
+                type: "Hot",
+                price: 750,
+                description: "Coffee blended with chocolate.",
+                tags: ["chocolate", "sweet"]
+            },
+            {
+                name: "Macchiato",
+                type: "Hot",
+                price: 650,
+                description: "Espresso topped with milk foam.",
+                tags: ["strong", "creamy"]
+            },
+            {
+                name: "Affogato",
+                type: "Hot",
+                price: 800,
+                description: "Espresso over vanilla ice cream.",
+                tags: ["vanilla", "sweet", "ice cream"]
+            },
+            {
+                name: "Iced Latte",
+                type: "Cold",
+                price: 750,
+                description: "Chilled espresso with creamy milk and ice.",
+                tags: ["cold", "creamy", "smooth"]
+            },
+            {
+                name: "Iced Americano",
+                type: "Cold",
+                price: 650,
+                description: "Refreshing espresso served over ice.",
+                tags: ["cold", "strong", "classic"]
+            },
+            {
+                name: "Caramel Velvet Frappe",
+                type: "Cold",
+                price: 800,
+                description: "Coffee blend with caramel and chocolate.",
+                tags: ["cold", "caramel", "chocolate", "sweet"]
+            },
+            {
+                name: "Iced Mocha",
+                type: "Cold",
+                price: 850,
+                description: "Cold coffee blended with rich chocolate.",
+                tags: ["cold", "chocolate", "sweet"]
+            },
+            {
+                name: "Caramel Frappé",
+                type: "Cold",
+                price: 900,
+                description: "Refreshing caramel coffee with whipped cream.",
+                tags: ["cold", "caramel", "creamy", "sweet"]
+            },
+            {
+                name: "Vanilla Frappé",
+                type: "Cold",
+                price: 900,
+                description: "Sweet vanilla coffee blended with ice.",
+                tags: ["cold", "vanilla", "sweet"]
+            },
+            {
+                name: "Oreo Coffee Frappé",
+                type: "Cold",
+                price: 950,
+                description: "Blended coffee with oreo cookies.",
+                tags: ["cold", "oreo", "sweet"]
+            },
+            {
+                name: "Honey Coconut Frappé",
+                type: "Cold",
+                price: 1000,
+                description: "Creamy honey coconut blended with ice.",
+                tags: ["cold", "coconut", "honey", "creamy", "sweet"]
+            }
+        ];
+
+
+        /* =========================================
+           ELEMENTS
+        ========================================= */
+
+        const assistantBtn = document.getElementById("coffeeAssistantBtn");
+        const assistantBox = document.getElementById("coffeeAssistant");
+        const closeAssistant = document.getElementById("closeAssistant");
+        const messages = document.getElementById("assistantMessages");
+        const input = document.getElementById("assistantInput");
+        const sendBtn = document.getElementById("assistantSend");
+
+
+        /* =========================================
+           OPEN / CLOSE
+        ========================================= */
+
+        assistantBtn.addEventListener("click", () => {
+            assistantBox.style.display = "block";
+            assistantBtn.style.display = "none";
+            input.focus();
+        });
+
+        closeAssistant.addEventListener("click", () => {
+            assistantBox.style.display = "none";
+            assistantBtn.style.display = "block";
+        });
+
+
+        /* =========================================
+           ADD MESSAGE
+        ========================================= */
+
+        function addMessage(text, sender = "bot") {
+            const message = document.createElement("div");
+            message.className = "assistant-message " + sender;
+            message.innerHTML = text;
+
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+
+        /* =========================================
+           COFFEE CARDS
+        ========================================= */
+
+        function createCoffeeCards(list) {
+
+            if (list.length === 0) {
+                return `
+                    <div class="coffee-card">
+                        Sorry, no matching coffee was found in the
+                        Coffee Nest menu. ☕
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="assistant-result">
+                    ${list.map(coffee => `
+                        <div class="coffee-card">
+                            <h3>☕ ${coffee.name}</h3>
+                            <p>${coffee.description}</p>
+                            <strong>PKR ${coffee.price}</strong>
+                            <p>${coffee.type} Coffee</p>
+                        </div>
+                    `).join("")}
+                </div>
+            `;
+        }
+
+
+        /* =========================================
+           FIND COFFEE
+        ========================================= */
+
+        function findCoffee(question) {
+            return coffees.find(coffee =>
+                question.includes(coffee.name.toLowerCase())
+            );
+        }
+
+
+        /* =========================================
+           ANSWER QUESTIONS
+        ========================================= */
+
+        function answerQuestion(rawQuestion) {
+
+            const question = rawQuestion.toLowerCase().trim();
+
+            if (!question) {
+                addMessage("Please ask me something about coffee ☕");
+                return;
+            }
+
+            let result = [];
+            let title = "";
+
+            /* ALL COFFEES / MENU */
+
+            if (
+                question.includes("all coffee") ||
+                question.includes("all coffees") ||
+                question.includes("what coffees") ||
+                question.includes("what coffee do you have") ||
+                question.includes("coffee menu") ||
+                question === "menu" ||
+                question.includes("show menu") ||
+                question.includes("complete menu")
+            ) {
+                result = coffees;
+                title = "☕ Here is our complete Coffee Nest menu:";
+            }
+
+            /* CHEAPEST */
+
+            else if (
+                question.includes("cheapest") ||
+                question.includes("lowest price") ||
+                question.includes("least expensive")
+            ) {
+                const cheapest = coffees.reduce((a, b) =>
+                    a.price < b.price ? a : b
+                );
+
+                result = [cheapest];
+                title = "💰 Our cheapest coffee is:";
+            }
+
+            /* MOST EXPENSIVE */
+
+            else if (
+                question.includes("most expensive") ||
+                question.includes("highest price") ||
+                question.includes("costly") ||
+                question.includes("most costly")
+            ) {
+                const expensive = coffees.reduce((a, b) =>
+                    a.price > b.price ? a : b
+                );
+
+                result = [expensive];
+                title = "💸 Our most expensive coffee is:";
+            }
+
+            /* PRICE LIMIT */
+
+            else if (
+                question.includes("under") ||
+                question.includes("below") ||
+                question.includes("less than") ||
+                question.includes("within") ||
+                question.includes("ke andar")
+            ) {
+
+                const numbers = question.match(/\d[\d,]*/g);
+
+                if (numbers) {
+                    const limit = parseInt(
+                        numbers[0].replace(/,/g, ""),
+                        10
+                    );
+
+                    result = coffees.filter(
+                        coffee => coffee.price <= limit
+                    );
+
+                    title = ` Coffees up to PKR ${limit}:`;
+                } else {
+                    addMessage("Please tell me the price limit, for example: <strong>coffee under PKR 800</strong>.");
+                    return;
+                }
+            }
+
+            /* HOT */
+
+            else if (
+                question.includes("hot coffee") ||
+                question.includes("hot coffees") ||
+                question.includes("which coffee is hot") ||
+                question.includes("which coffees are hot")
+            ) {
+                result = coffees.filter(
+                    coffee => coffee.type === "Hot"
+                );
+
+                title = "🔥 Our hot coffees:";
+            }
+
+            /* COLD */
+
+            else if (
+                question.includes("cold coffee") ||
+                question.includes("cold coffees") ||
+                question.includes("iced coffee") ||
+                question.includes("iced coffees") ||
+                question.includes("which coffees are cold")
+            ) {
+                result = coffees.filter(
+                    coffee => coffee.type === "Cold"
+                );
+
+                title = " Our cold coffees:";
+            }
+
+            /* CHOCOLATE */
+
+            else if (question.includes("chocolate")) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("chocolate")
+                );
+
+                title = " Chocolate coffees:";
+            }
+
+            /* CARAMEL */
+
+            else if (question.includes("caramel")) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("caramel")
+                );
+
+                title = " Caramel coffees:";
+            }
+
+            /* CREAMY / SMOOTH */
+
+            else if (
+                question.includes("creamy") ||
+                question.includes("smooth")
+            ) {
+                result = coffees.filter(
+                    coffee =>
+                        coffee.tags.includes("creamy") ||
+                        coffee.tags.includes("smooth")
+                );
+
+                title = "🥛 Creamy & smooth coffees:";
+            }
+
+            /* STRONG */
+
+            else if (
+                question.includes("strong") ||
+                question.includes("bold") ||
+                question.includes("powerful")
+            ) {
+                result = coffees.filter(
+                    coffee =>
+                        coffee.tags.includes("strong") ||
+                        coffee.tags.includes("bold")
+                );
+
+                title = "⚡ Strong coffee choices:";
+            }
+
+            /* SWEET */
+
+            else if (
+                question.includes("sweet") ||
+                question.includes("dessert coffee")
+            ) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("sweet")
+                );
+
+                title = " Sweet coffee choices:";
+            }
+
+            /* OREO */
+
+            else if (question.includes("oreo")) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("oreo")
+                );
+
+                title = " Oreo coffee:";
+            }
+
+            /* COCONUT */
+
+            else if (question.includes("coconut")) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("coconut")
+                );
+
+                title = " Coconut coffee:";
+            }
+
+            /* ICE CREAM */
+
+            else if (
+                question.includes("ice cream") ||
+                question.includes("icecream")
+            ) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("ice cream")
+                );
+
+                title = " Coffee served with ice cream:";
+            }
+
+            /* VANILLA */
+
+            else if (question.includes("vanilla")) {
+                result = coffees.filter(
+                    coffee => coffee.tags.includes("vanilla")
+                );
+
+                title = " Vanilla coffee:";
+            }
+
+            /* DIFFERENCE */
+
+            else if (
+                question.includes("difference") &&
+                question.includes("latte") &&
+                question.includes("cappuccino")
+            ) {
+                addMessage(`
+                    <strong>☕ Latte vs Cappuccino</strong><br><br>
+
+                    <strong>Latte:</strong>
+                    Smooth coffee with creamy milk.
+                    Price: PKR 700.<br><br>
+
+                    <strong>Cappuccino:</strong>
+                    Espresso with steamed milk foam.
+                    Price: PKR 650.
+                `);
+
+                return;
+            }
+
+            /* PRICE QUESTION */
+
+            else if (
+                question.includes("price") ||
+                question.includes("cost") ||
+                question.includes("how much") ||
+                question.includes("kitne ka") ||
+                question.includes("kitni price")
+            ) {
+
+                const matchedCoffee = findCoffee(question);
+
+                if (matchedCoffee) {
+                    addMessage(`
+                        <strong> ${matchedCoffee.name}</strong><br><br>
+                        ${matchedCoffee.description}<br><br>
+                        <strong>Price:</strong>
+                        PKR ${matchedCoffee.price}
+                    `);
+
+                    return;
+                }
+
+                result = coffees;
+                title = "Coffee Nest prices:";
+            }
+
+            /* SPECIFIC COFFEE */
+
+            else {
+
+                const matchedCoffee = findCoffee(question);
+
+                if (matchedCoffee) {
+
+                    addMessage(`
+                        <strong>☕ ${matchedCoffee.name}</strong><br><br>
+
+                        ${matchedCoffee.description}<br><br>
+
+                        <strong>Price:</strong>
+                        PKR ${matchedCoffee.price}<br>
+
+                        <strong>Type:</strong>
+                        ${matchedCoffee.type} coffee
+                    `);
+
+                    return;
+                }
+
+                addMessage(`
+                    I can help you with Coffee Nest coffee. ☕<br><br>
+
+                    You can ask me about:<br>
+                    • All coffees and prices<br>
+                    • Cheapest or most expensive coffee<br>
+                    • Hot or cold coffees<br>
+                    • Chocolate, caramel, vanilla<br>
+                    • Creamy or smooth coffees<br>
+                    • Strong or sweet coffee<br>
+                    • Oreo, coconut or ice cream<br>
+                    • Price of any coffee
+                `);
+
+                return;
+            }
+
+            addMessage(`
+                <div class="answer-title">${title}</div>
+                ${createCoffeeCards(result)}
+            `);
+        }
+
+
+        /* =========================================
+           SEND MESSAGE
+        ========================================= */
+
+        function sendMessage() {
+
+            const question = input.value.trim();
+
+            if (!question) {
+                input.focus();
+                return;
+            }
+
+            addMessage(question, "user");
+
+            input.value = "";
+
+            setTimeout(() => {
+                answerQuestion(question);
+            }, 250);
+        }
+
+
+        /* =========================================
+           SEND BUTTON
+        ========================================= */
+
+        sendBtn.addEventListener(
+            "click",
+            sendMessage
+        );
+
+
+        /* =========================================
+           ENTER KEY
+        ========================================= */
+
+        input.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           QUICK QUESTIONS
+        ========================================= */
+
+        document
+            .querySelectorAll(".quick-questions button")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        const question =
+                            this.dataset.question;
+
+                        addMessage(
+                            question,
+                            "user"
+                        );
+
+                        setTimeout(() => {
+                            answerQuestion(question);
+                        }, 250);
+
+                    }
+                );
+
+            });
+
+    </script>
+<a href="experience.html" class="back-to-experience">
+    ← Back to Experience
+</a>
+</body>
+</html>

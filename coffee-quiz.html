@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Coffee Recommendation Quiz | Coffee Nest</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-mug-hot"></i>
+            Coffee Nest
+        </div>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="experience.html">Experience</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+
+    <section class="experience-page">
+
+        <div class="experience-header">
+            <h1>Coffee Recommendation Quiz</h1>
+            <p>Answer a few questions and discover your perfect coffee.</p>
+        </div>
+
+
+        <div class="coffee-quiz-box">
+
+            <!-- Question 1 -->
+            <div class="quiz-question">
+                <h3>1. What type of coffee do you prefer?</h3>
+
+                <label>
+                    <input type="radio" name="coffeeType" value="strong">
+                    Strong & Bold
+                </label>
+
+                <label>
+                    <input type="radio" name="coffeeType" value="creamy">
+                    Creamy & Smooth
+                </label>
+
+                <label>
+                    <input type="radio" name="coffeeType" value="sweet">
+                    Sweet & Chocolatey
+                </label>
+            </div>
+
+
+            <!-- Question 2 -->
+            <div class="quiz-question">
+                <h3>2. How do you like your coffee?</h3>
+
+                <label>
+                    <input type="radio" name="temperature" value="hot">
+                    Hot
+                </label>
+
+                <label>
+                    <input type="radio" name="temperature" value="cold">
+                    Iced
+                </label>
+            </div>
+
+
+            <!-- Question 3 -->
+            <div class="quiz-question">
+                <h3>3. What flavor sounds best?</h3>
+
+                <label>
+                    <input type="radio" name="flavor" value="chocolate">
+                    Chocolate
+                </label>
+
+                <label>
+                    <input type="radio" name="flavor" value="caramel">
+                    Caramel
+                </label>
+
+                <label>
+                    <input type="radio" name="flavor" value="classic">
+                    Classic Coffee
+                </label>
+            </div>
+
+
+            <!-- Question 4 -->
+            <div class="quiz-question">
+                <h3>4. What mood are you in?</h3>
+
+                <label>
+                    <input type="radio" name="mood" value="energy">
+                    I need energy
+                </label>
+
+                <label>
+                    <input type="radio" name="mood" value="relax">
+                    I want to relax
+                </label>
+
+                <label>
+                    <input type="radio" name="mood" value="treat">
+                    I want a sweet treat
+                </label>
+            </div>
+
+
+            <!-- Recommendation Button -->
+            <button id="getRecommendation" class="experience-card-btn">
+                Get My Recommendation 
+            </button>
+
+
+            <!-- Recommendation Result -->
+            <div id="quizResult" class="coffee-result"></div>
+
+        </div>
+
+
+        <div style="text-align:center; margin-top:40px;">
+            
+        </div>
+
+    </section>
+
+
+    <script>
+
+        const recommendationBtn =
+            document.getElementById("getRecommendation");
+
+        const quizResult =
+            document.getElementById("quizResult");
+
+
+        /* Existing coffees from Menu */
+
+        const coffees = {
+
+            Espresso: {
+                image: "images/espresso.jpeg",
+                description: "Rich, bold and intense coffee.",
+                price: "PKR 450"
+            },
+
+            Cappuccino: {
+                image: "images/cappuccino.jpeg",
+                description: "Espresso with steamed milk foam.",
+                price: "PKR 650"
+            },
+
+            Latte: {
+                image: "images/latte.jpeg",
+                description: "Smooth coffee with creamy milk.",
+                price: "PKR 700"
+            },
+
+            Mocha: {
+                image: "images/mocha.jpeg",
+                description: "Coffee blended with chocolate.",
+                price: "PKR 750"
+            },
+
+            "Iced Latte": {
+                image: "images/iced-latte.jpeg",
+                description: "Chilled espresso with creamy milk and ice.",
+                price: "PKR 750"
+            },
+
+            "Caramel Frappé": {
+                image: "images/caramel-frappe.jpeg",
+                description: "Refreshing caramel coffee with whipped cream.",
+                price: "PKR 900"
+            },
+
+            Americano: {
+                image: "images/americano.jpeg",
+                description: "Espresso blended with hot water.",
+                price: "PKR 500"
+            },
+
+            "Flat White": {
+                image: "images/flat white.jpeg",
+                description: "Velvety smooth espresso coffee.",
+                price: "PKR 700"
+            }
+
+        };
+
+
+        recommendationBtn.addEventListener("click", function () {
+
+            const coffeeType =
+                document.querySelector(
+                    'input[name="coffeeType"]:checked'
+                );
+
+            const temperature =
+                document.querySelector(
+                    'input[name="temperature"]:checked'
+                );
+
+            const flavor =
+                document.querySelector(
+                    'input[name="flavor"]:checked'
+                );
+
+            const mood =
+                document.querySelector(
+                    'input[name="mood"]:checked'
+                );
+
+
+            /* Check all answers */
+
+            if (!coffeeType || !temperature || !flavor || !mood) {
+
+                quizResult.innerHTML = `
+                    <h2> Almost There!</h2>
+                    <p>Please answer all questions to get your recommendation.</p>
+                `;
+
+                quizResult.style.display = "block";
+
+                return;
+            }
+
+
+            let recommendation = "Cappuccino";
+
+            let message =
+                "A smooth and creamy choice for you!";
+
+
+            /* Recommendation Logic */
+
+            if (
+                coffeeType.value === "strong" &&
+                mood.value === "energy"
+            ) {
+
+                recommendation = "Espresso";
+
+                message =
+                    "Strong, bold and perfect when you need an energy boost!";
+            }
+
+
+            else if (
+                temperature.value === "cold" &&
+                flavor.value === "caramel"
+            ) {
+
+                recommendation = "Caramel Frappé";
+
+                message =
+                    "Refreshing, creamy and caramel flavored — perfect for you!";
+            }
+
+
+            else if (
+                temperature.value === "cold"
+            ) {
+
+                recommendation = "Iced Latte";
+
+                message =
+                    "Cool, smooth and refreshing — perfect for you!";
+            }
+
+
+            else if (
+                coffeeType.value === "sweet" ||
+                flavor.value === "chocolate" ||
+                mood.value === "treat"
+            ) {
+
+                recommendation = "Mocha";
+
+                message =
+                    "Sweet, chocolatey and delicious — your perfect treat!";
+            }
+
+
+            else if (
+                flavor.value === "caramel"
+            ) {
+
+                recommendation = "Caramel Frappé";
+
+                message =
+                    "Smooth, creamy and deliciously caramel flavored!";
+            }
+
+
+            else if (
+                coffeeType.value === "strong"
+            ) {
+
+                recommendation = "Americano";
+
+                message =
+                    "Bold and classic — a great coffee choice for you!";
+            }
+
+
+            else if (
+                coffeeType.value === "creamy"
+            ) {
+
+                recommendation = "Cappuccino";
+
+                message =
+                    "Creamy, smooth and perfectly balanced!";
+            }
+
+
+            /* Get selected coffee */
+
+            const coffee = coffees[recommendation];
+
+
+            /* Show complete menu-style card */
+
+            quizResult.innerHTML = `
+
+                <h2>☕ Your Perfect Match</h2>
+
+                <p class="recommendation-message">
+                    ${message}
+                </p>
+
+                <div class="menu-card recommendation-card">
+
+                    <img
+                        src="${coffee.image}"
+                        alt="${recommendation}"
+                    >
+
+                    <h3>${recommendation}</h3>
+
+                    <p>${coffee.description}</p>
+
+                    <span>${coffee.price}</span>
+
+                </div>
+
+            `;
+
+
+            quizResult.style.display = "block";
+
+
+            /* Smooth scroll to result */
+
+            quizResult.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        });
+
+    </script>
+<a href="experience.html" class="back-to-experience">
+    ← Back to Experience
+</a>
+</body>
+
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Coffee | Coffee Nest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <section class="experience-page">
+
+        <div class="experience-header">
+            <h1>Customize Your Coffee</h1>
+            <p>Create your perfect cup, exactly the way you like it.</p>
+        </div>
+
+        <div class="coffee-customizer">
+
+            <div class="custom-option">
+                <label for="coffeeType"> Coffee Type</label>
+                <select id="coffeeType">
+                    <option value="Espresso">Espresso</option>
+                    <option value="Cappuccino">Cappuccino</option>
+                    <option value="Latte">Latte</option>
+                    <option value="Mocha">Mocha</option>
+                    <option value="Americano">Americano</option>
+                </select>
+            </div>
+
+            <div class="custom-option">
+                <label for="milk"> Milk</label>
+                <select id="milk">
+                    <option value="Regular Milk">Regular Milk</option>
+                    <option value="Oat Milk">Oat Milk</option>
+                    <option value="Almond Milk">Almond Milk</option>
+                    <option value="No Milk">No Milk</option>
+                </select>
+            </div>
+
+            <div class="custom-option">
+                <label for="sweetness"> Sweetness</label>
+                <select id="sweetness">
+                    <option value="No Sugar">No Sugar</option>
+                    <option value="Less Sweet">Less Sweet</option>
+                    <option value="Normal Sweet">Normal Sweet</option>
+                    <option value="Extra Sweet">Extra Sweet</option>
+                </select>
+            </div>
+
+            <div class="custom-option">
+                <label for="temperature"> Temperature</label>
+                <select id="temperature">
+                    <option value="Hot">Hot</option>
+                    <option value="Warm">Warm</option>
+                    <option value="Iced">Iced</option>
+                </select>
+            </div>
+
+            <div class="custom-option">
+                <label for="topping"> Topping</label>
+                <select id="topping">
+                    <option value="No Topping">No Topping</option>
+                    <option value="Whipped Cream">Whipped Cream</option>
+                    <option value="Chocolate">Chocolate</option>
+                    <option value="Caramel">Caramel</option>
+                    <option value="Cinnamon">Cinnamon</option>
+                </select>
+            </div>
+
+            <button id="createCoffeeBtn" class="experience-card-btn">
+                Create My Coffee 
+            </button>
+
+            <div id="coffeeResult" class="coffee-result"></div>
+
+        </div>
+
+    </section>
+
+    <script>
+        const createCoffeeBtn = document.getElementById("createCoffeeBtn");
+        const coffeeResult = document.getElementById("coffeeResult");
+
+        createCoffeeBtn.addEventListener("click", function () {
+
+            const coffeeType = document.getElementById("coffeeType").value;
+            const milk = document.getElementById("milk").value;
+            const sweetness = document.getElementById("sweetness").value;
+            const temperature = document.getElementById("temperature").value;
+            const topping = document.getElementById("topping").value;
+
+            coffeeResult.innerHTML = `
+                <h2> Your Perfect Coffee</h2>
+                <p><strong>${temperature} ${coffeeType}</strong></p>
+                <p>${milk} • ${sweetness} • ${topping}</p>
+                <p>Your coffee is customized just for you! </p>
+            `;
+
+            coffeeResult.style.display = "block";
+        });
+    </script>
+<a href="experience.html" class="back-to-experience">
+    ← Back to Experience
+</a>
+</body>
+</html>

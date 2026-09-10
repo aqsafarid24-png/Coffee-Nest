@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seasonal Themes | Coffee Nest</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-mug-hot"></i>
+            Coffee Nest
+        </div>
+
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="experience.html">Experience</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+
+    <section class="experience-page">
+
+        <div class="experience-header">
+            <h1>Seasonal Themes</h1>
+            <p>Choose a theme and explore special Coffee Nest coffees.</p>
+        </div>
+
+
+        <!-- Themes -->
+        <div class="experience-grid">
+
+            <div class="experience-card">
+                <h2> Ramzan</h2>
+                <p>Explore coffees perfect for Ramzan.</p>
+                <button onclick="showTheme('ramzan')">Explore</button>
+            </div>
+
+            <div class="experience-card">
+                <h2> Eid</h2>
+                <p>Explore delicious coffees for Eid celebrations.</p>
+                <button onclick="showTheme('eid')">Explore</button>
+            </div>
+
+            <div class="experience-card">
+                <h2> New Year</h2>
+                <p>Welcome the New Year with special coffees.</p>
+                <button onclick="showTheme('newyear')">Explore</button>
+            </div>
+
+            <div class="experience-card">
+                <h2>PK Independence Day</h2>
+                <p>Celebrate Independence Day with Coffee Nest.</p>
+                <button onclick="showTheme('independence')">Explore</button>
+            </div>
+
+        </div>
+
+
+        <!-- Coffee Cards -->
+        <div id="coffeeDisplay" class="seasonal-display">
+
+            <h2 id="themeTitle"></h2>
+
+            <div id="coffeeCards" class="menu-container"></div>
+
+        </div>
+
+
+        <div style="text-align:center; margin-top:40px;">
+            <a href="experience.html" class="experience-card-btn">
+                ← Back to Experience
+            </a>
+        </div>
+
+    </section>
+
+
+    <script>
+
+        const coffees = {
+
+            ramzan: [
+                {
+                    image: "images/espresso.jpeg",
+                    name: "Espresso",
+                    description: "Rich, bold and intense coffee.",
+                    price: "PKR 450"
+                },
+                {
+                    image: "images/latte.jpeg",
+                    name: "Latte",
+                    description: "Smooth coffee with creamy milk.",
+                    price: "PKR 700"
+                },
+                {
+                    image: "images/cappuccino.jpeg",
+                    name: "Cappuccino",
+                    description: "Espresso with steamed milk foam.",
+                    price: "PKR 650"
+                }
+            ],
+
+            eid: [
+                {
+                    image: "images/mocha.jpeg",
+                    name: "Mocha",
+                    description: "Coffee blended with chocolate.",
+                    price: "PKR 750"
+                },
+                {
+                    image: "images/caramel-frappe.jpeg",
+                    name: "Caramel Frappé",
+                    description: "Refreshing caramel coffee with whipped cream.",
+                    price: "PKR 900"
+                },
+                {
+                    image: "images/vanilla-frappe.jpeg",
+                    name: "Vanilla Frappé",
+                    description: "Sweet vanilla coffee blended with ice.",
+                    price: "PKR 900"
+                }
+            ],
+
+            newyear: [
+                {
+                    image: "images/iced-mocha.jpeg",
+                    name: "Iced Mocha",
+                    description: "Cold coffee blended with rich chocolate.",
+                    price: "PKR 850"
+                },
+                {
+                    image: "images/caramel valvet-frappe.jpeg",
+                    name: "Caramel Velvet Frappe",
+                    description: "Coffee blend with caramel and chocolate.",
+                    price: "PKR 800"
+                },
+                {
+                    image: "images/affogato.jpeg",
+                    name: "Affogato",
+                    description: "Espresso over vanilla ice cream.",
+                    price: "PKR 800"
+                }
+            ],
+
+            independence: [
+                {
+                    image: "images/americano.jpeg",
+                    name: "Americano",
+                    description: "Espresso blended with hot water.",
+                    price: "PKR 500"
+                },
+                {
+                    image: "images/flat white.jpeg",
+                    name: "Flat White",
+                    description: "Velvety smooth espresso coffee.",
+                    price: "PKR 700"
+                },
+                {
+                    image: "images/iced-latte.jpeg",
+                    name: "Iced Latte",
+                    description: "Chilled espresso with creamy milk and ice.",
+                    price: "PKR 750"
+                }
+            ]
+
+        };
+
+
+        function showTheme(theme) {
+
+            const display = document.getElementById("coffeeDisplay");
+            const title = document.getElementById("themeTitle");
+            const cards = document.getElementById("coffeeCards");
+
+            const selectedCoffees = coffees[theme];
+
+            const titles = {
+                ramzan: "🌙 Ramzan Special Coffees",
+                eid: "🎉 Eid Special Coffees",
+                newyear: "🎆 New Year Special Coffees",
+                independence: "🇵🇰 Independence Day Special Coffees"
+            };
+
+            title.textContent = titles[theme];
+
+            cards.innerHTML = "";
+
+            selectedCoffees.forEach(coffee => {
+
+                cards.innerHTML += `
+                    <div class="menu-card">
+
+                        <img src="${coffee.image}" alt="${coffee.name}">
+
+                        <h3>${coffee.name}</h3>
+
+                        <p>${coffee.description}</p>
+
+                        <span>${coffee.price}</span>
+
+                    </div>
+                `;
+
+            });
+
+            display.style.display = "block";
+
+            display.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
